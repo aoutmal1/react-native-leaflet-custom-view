@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { WebView } from 'react-native-webview';
+import { WebView, WebViewProps } from 'react-native-webview';
 import {
   MapMarker,
   WebviewLeafletMessage,
@@ -49,22 +49,26 @@ export type LeafletViewProps = {
   zoom?: number;
   doDebug?: boolean;
   androidHardwareAccelerationDisabled?: boolean;
+  webviewStyle?: WebViewProps;
+  injectedJavaScript?: string;
 };
 
 const LeafletView: React.FC<LeafletViewProps> = ({
-  renderLoading,
+  renderLoading = (() => <LoadingIndicator />),
   onError,
   onLoadEnd,
   onLoadStart,
   onMessageReceived,
-  mapLayers,
+  mapLayers = DEFAULT_MAP_LAYERS,
   mapMarkers,
   mapShapes,
   mapCenterPosition,
   ownPositionMarker,
-  zoom,
-  doDebug,
+  zoom = DEFAULT_ZOOM,
+  doDebug = __DEV__,
   androidHardwareAccelerationDisabled,
+  webviewStyle,
+  injectedJavaScript
 }) => {
   const webViewRef = useRef<WebView>(null);
   const [initialized, setInitialized] = useState(false);
@@ -180,9 +184,8 @@ const LeafletView: React.FC<LeafletViewProps> = ({
       return;
     }
     sendMessage({
-	  ...ownPositionMarker,
-	  id: OWN_POSTION_MARKER_ID
-	});
+      ownPositionMarker: { ...ownPositionMarker, id: OWN_POSTION_MARKER_ID },
+    });
   }, [initialized, ownPositionMarker, sendMessage]);
 
   //Handle mapCenterPosition update
@@ -219,15 +222,10 @@ const LeafletView: React.FC<LeafletViewProps> = ({
       allowUniversalAccessFromFileURLs={true}
       allowFileAccessFromFileURLs={true}
       androidHardwareAccelerationDisabled={androidHardwareAccelerationDisabled}
+      style={webviewStyle}
+      injectedJavaScript={injectedJavaScript}
     />
   );
-};
-
-LeafletView.defaultProps = {
-  renderLoading: () => <LoadingIndicator />,
-  mapLayers: DEFAULT_MAP_LAYERS,
-  zoom: DEFAULT_ZOOM,
-  doDebug: __DEV__,
 };
 
 const styles = StyleSheet.create({
