@@ -15,19 +15,19 @@ Notes: This project is replacement for https://github.com/reggie3/react-native-w
 Install using npm or yarn like this:
 
 ```sh
-npm install --save react-native-leaflet-view
+npm install --save react-native-leaflet-custom-view
 ```
 
 or
 
 ```sh
-yarn add react-native-leaflet-view
+yarn add react-native-leaflet-custom-view
 ```
 
 ## Usage
 
 ```js
-import { LatLng, LeafletView } from 'react-native-leaflet-view';
+import { LatLng, LeafletView } from 'react-native-leaflet-custom-view';
 
 <LeafletView
     // The rest of your props, see the list below
